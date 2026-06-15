@@ -7,8 +7,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      tokenApiUrl: process.env.TOKEN_API_URL || 'http://localhost:3001',
-      extractionApiUrl: process.env.EXTRACTION_API_URL || 'http://localhost:8000',
+      tokenApiUrl: process.env.NUXT_PUBLIC_TOKEN_API_URL || 'http://localhost:3001',
+      extractionApiUrl: process.env.NUXT_PUBLIC_EXTRACTION_API_URL || 'http://localhost:8000',
     },
   },
 
