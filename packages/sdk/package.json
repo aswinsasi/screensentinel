@@ -1,5 +1,5 @@
 {
-  "name": "@screensentinel/sdk",
+  "name": "screensentinel-sdk",
   "version": "0.1.0",
   "description": "ScreenSentinel Embedding SDK - Invisible forensic watermarking for web apps",
   "main": "dist/screensentinel.cjs.js",
