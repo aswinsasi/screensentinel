@@ -1,0 +1,8 @@
+{
+  "name": "@screensentinel/react",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "peerDependencies": { "react": ">=18.0.0" },
+  "dependencies": { "@screensentinel/sdk": "workspace:*" }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "screensentinel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Invisible Forensic Attribution for Web Applications",
+  "author": "Agent Viscro",
+  "license": "PROPRIETARY",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "db:migrate": "cd packages/extraction-api && alembic upgrade head",
+    "db:seed": "pnpm --filter token-service run seed",
+    "keys:generate": "node scripts/generate-keys.js",
+    "bootstrap": "bash scripts/bootstrap.sh"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.0",
+    "typescript": "^5.5.0"
+  },
+  "packageManager": "pnpm@9.6.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

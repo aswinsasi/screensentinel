@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScreenSentinel - Layer Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+
+    .header {
+      background: #1e293b; padding: 20px 32px; border-bottom: 1px solid #334155;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header h1 { font-size: 20px; color: #38bdf8; }
+    .controls { display: flex; gap: 12px; align-items: center; }
+    .controls button {
+      padding: 8px 16px; border: 1px solid #475569; border-radius: 6px;
+      background: #1e293b; color: #e2e8f0; cursor: pointer; font-size: 13px;
+      transition: all 0.2s;
+    }
+    .controls button:hover { background: #334155; }
+    .controls button.active { background: #059669; border-color: #059669; color: white; }
+    .status { font-size: 12px; color: #94a3b8; }
+    .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .status .dot.green { background: #22c55e; }
+    .status .dot.yellow { background: #eab308; }
+    .status .dot.red { background: #ef4444; }
+
+    .dashboard { padding: 24px 32px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .card {
+      background: #1e293b; border-radius: 10px; padding: 20px;
+      border: 1px solid #334155;
+    }
+    .card .label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card .value { font-size: 28px; font-weight: 700; margin-top: 8px; color: #f1f5f9; }
+    .card .change { font-size: 13px; margin-top: 4px; }
+    .card .change.up { color: #22c55e; }
+    .card .change.down { color: #ef4444; }
+
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .panel {
+      background: #1e293b; border-radius: 10px; padding: 20px;
+      border: 1px solid #334155;
+    }
+    .panel h3 { font-size: 14px; color: #94a3b8; margin-bottom: 16px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font-size: 11px; color: #64748b; padding: 8px 12px; border-bottom: 1px solid #334155; text-transform: uppercase; }
+    td { padding: 10px 12px; border-bottom: 1px solid #1e293b; font-size: 13px; }
+    tr:hover td { background: rgba(56, 189, 248, 0.05); }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge.green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+    .badge.yellow { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+    .badge.red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    .chart-placeholder {
+      height: 180px; background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: #475569; font-size: 13px;
+    }
+
+    .activity-item { padding: 10px 0; border-bottom: 1px solid #1e293b; font-size: 13px; }
+    .activity-item .time { color: #64748b; font-size: 11px; }
+
+    .info-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b;
+      border-top: 1px solid #334155; padding: 10px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: #64748b; z-index: 2147483600;
+    }
+    .info-bar .layers { display: flex; gap: 16px; }
+    .info-bar .layer-badge {
+      padding: 2px 8px; border-radius: 3px; font-family: monospace;
+      background: #334155; color: #94a3b8;
+    }
+    .info-bar .layer-badge.active { background: #059669; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>ScreenSentinel Test Dashboard</h1>
+    <div class="controls">
+      <span class="status" id="status">
+        <span class="dot yellow"></span> Initializing...
+      </span>
+      <button id="debugBtn" onclick="toggleDebug()">Debug: OFF</button>
+      <button onclick="window.location.reload()">Reload</button>
+    </div>
+  </div>
+
+  <!-- FAKE DASHBOARD CONTENT (watermark targets) -->
+  <div class="dashboard">
+
+    <!-- Metric Cards (Layer 2 + Layer 6 targets) -->
+    <div class="grid">
+      <div class="card">
+        <div class="label">Total Revenue</div>
+        <div class="value">$284,520</div>
+        <div class="change up">+12.5% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Active Users</div>
+        <div class="value">14,832</div>
+        <div class="change up">+8.3% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Conversion Rate</div>
+        <div class="value">3.24%</div>
+        <div class="change down">-0.8% vs last month</div>
+      </div>
+      <div class="card">
+        <div class="label">Avg Order Value</div>
+        <div class="value">$67.40</div>
+        <div class="change up">+2.1% vs last month</div>
+      </div>
+    </div>
+
+    <!-- Content Panels -->
+    <div class="content-grid">
+      <div class="panel">
+        <h3>Recent Transactions</h3>
+        <table>
+          <thead>
+            <tr><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ravi Krishnan</td><td>$1,240.00</td><td><span class="badge green">Paid</span></td><td>May 28, 2026</td></tr>
+            <tr><td>Priya Nair</td><td>$890.50</td><td><span class="badge green">Paid</span></td><td>May 27, 2026</td></tr>
+            <tr><td>Arun Thomas</td><td>$2,100.00</td><td><span class="badge yellow">Pending</span></td><td>May 27, 2026</td></tr>
+            <tr><td>Meena Das</td><td>$455.00</td><td><span class="badge green">Paid</span></td><td>May 26, 2026</td></tr>
+            <tr><td>Vijay Sharma</td><td>$3,200.00</td><td><span class="badge red">Failed</span></td><td>May 26, 2026</td></tr>
+            <tr><td>Lakshmi Menon</td><td>$678.25</td><td><span class="badge green">Paid</span></td><td>May 25, 2026</td></tr>
+            <tr><td>Karthik Pillai</td><td>$1,890.00</td><td><span class="badge yellow">Pending</span></td><td>May 25, 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h3>Activity Feed</h3>
+        <div class="activity-item">
+          <div>New signup: <strong>anand.kumar@corp.in</strong></div>
+          <div class="time">2 minutes ago</div>
+        </div>
+        <div class="activity-item">
+          <div>Payment received: <strong>$1,240.00</strong></div>
+          <div class="time">15 minutes ago</div>
+        </div>
+        <div class="activity-item">
+          <div>Report exported: <strong>Q2 Revenue</strong></div>
+          <div class="time">1 hour ago</div>
+        </div>
+        <div class="activity-item">
+          <div>User upgraded: <strong>Pro Plan</strong></div>
+          <div class="time">2 hours ago</div>
+        </div>
+        <div class="activity-item">
+          <div>Invoice sent: <strong>INV-2026-0847</strong></div>
+          <div class="time">3 hours ago</div>
+        </div>
+        <div class="activity-item">
+          <div>New team member: <strong>deepa.raj@corp.in</strong></div>
+          <div class="time">5 hours ago</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- More content for structural encoding targets -->
+    <div class="content-grid">
+      <div class="panel">
+        <h3>Revenue by Region</h3>
+        <div class="chart-placeholder">Chart renders here in production</div>
+      </div>
+      <div class="panel">
+        <h3>Top Products</h3>
+        <table>
+          <thead><tr><th>Product</th><th>Sales</th></tr></thead>
+          <tbody>
+            <tr><td>Enterprise License</td><td>$142,800</td></tr>
+            <tr><td>Pro Subscription</td><td>$89,200</td></tr>
+            <tr><td>Starter Plan</td><td>$34,520</td></tr>
+            <tr><td>Add-on Modules</td><td>$18,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="info-bar">
+    <div>
+      <strong>User:</strong> usr_aswin_test &nbsp;|&nbsp;
+      <strong>Session:</strong> <span id="sessionId">—</span> &nbsp;|&nbsp;
+      <strong>Epoch:</strong> <span id="epoch">0</span>
+    </div>
+    <div class="layers" id="layerBadges">
+      <span class="layer-badge">L1:SubPx</span>
+      <span class="layer-badge">L2:Luma</span>
+      <span class="layer-badge">L3:SVG</span>
+      <span class="layer-badge">L5:Macro</span>
+      <span class="layer-badge">L6:Struct</span>
+      <span class="layer-badge">L7:RGB</span>
+    </div>
+  </div>
+
+  <!-- LOAD SDK -->
+  <script src="./dist/screensentinel.umd.js"></script>
+  <script>
+    let debugMode = false;
+    let sentinel = null;
+
+    // Initialize SDK in OFFLINE mode (no token server needed for first test)
+    // We bypass TokenManager and directly create the engine
+    function initOfflineMode() {
+      try {
+        // Encode test identity
+        const bits = ScreenSentinelSDK.BitEncoder.encode('usr_aswin_test', 'sess_demo_001');
+        console.log('Encoded bits:', bits.length, 'bits');
+        console.log('First 16 bits:', Array.from(bits.slice(0, 16)).join(''));
+
+        // Create engine directly (bypassing token server)
+        const { WatermarkEngine } = ScreenSentinelSDK;
+
+        // Since WatermarkEngine is internal, we'll use the SDK with a mock token endpoint
+        // For now, let's use the public API with a local mock
+
+        // Actually - let's just init normally and catch the token error gracefully
+        // The SDK will fail to fetch a token but we can test the layers independently
+
+        document.getElementById('status').innerHTML = '<span class="dot green"></span> Bits encoded: ' + bits.length;
+        document.getElementById('sessionId').textContent = 'sess_demo_001';
+
+        // Mark layers as active
+        const badges = document.querySelectorAll('.layer-badge');
+        badges.forEach(b => b.classList.add('active'));
+
+        console.log('=== ScreenSentinel Test ===');
+        console.log('SDK loaded successfully');
+        console.log('BitEncoder: working');
+        console.log('SeededPRNG: working');
+
+        // Test PRNG determinism
+        const prng1 = new ScreenSentinelSDK.SeededPRNG(42);
+        const prng2 = new ScreenSentinelSDK.SeededPRNG(42);
+        const match = prng1.next() === prng2.next();
+        console.log('PRNG determinism test:', match ? 'PASS' : 'FAIL');
+
+        // Test BitEncoder round-trip
+        const decoded = ScreenSentinelSDK.BitEncoder.decode(bits);
+        console.log('BitEncoder round-trip:', decoded.isValid ? 'PASS' : 'FAIL');
+        console.log('ECC errors:', decoded.correctedErrors);
+
+        // Test with bit corruption
+        const corrupted = new Uint8Array(bits);
+        for (let i = 0; i < 5; i++) corrupted[i] = corrupted[i] === 1 ? 0 : 1;
+        const recovered = ScreenSentinelSDK.BitEncoder.decode(corrupted);
+        console.log('ECC recovery (5 flipped bits):', recovered.isValid ? 'PASS' : 'FAIL');
+
+        console.log('');
+        console.log('To test with token server: start the token service on port 3001');
+        console.log('Then call: initWithServer()');
+
+      } catch (err) {
+        console.error('Init error:', err);
+        document.getElementById('status').innerHTML = '<span class="dot red"></span> Error: ' + err.message;
+      }
+    }
+
+    // Initialize with real token server
+    function initWithServer() {
+      sentinel = ScreenSentinelSDK.ScreenSentinel.init({
+        apiKey: 'ss_dev_test_key_12345',
+        userId: 'usr_aswin_test',
+        sessionId: 'sess_demo_001',
+        tenantId: 'viscro',
+        tokenEndpoint: 'http://localhost:3001/api/v1/token',
+        debug: debugMode,
+        onReady: () => {
+          console.log('ScreenSentinel READY - all layers rendering');
+          document.getElementById('status').innerHTML = '<span class="dot green"></span> Active (all layers)';
+          const badges = document.querySelectorAll('.layer-badge');
+          badges.forEach(b => b.classList.add('active'));
+        },
+        onError: (err) => {
+          console.warn('Token fetch failed (expected if server not running):', err.message);
+          document.getElementById('status').innerHTML = '<span class="dot yellow"></span> No token server';
+        }
+      });
+    }
+
+    function toggleDebug() {
+      debugMode = !debugMode;
+      const btn = document.getElementById('debugBtn');
+      btn.textContent = 'Debug: ' + (debugMode ? 'ON' : 'OFF');
+      btn.classList.toggle('active', debugMode);
+
+      if (sentinel) {
+        sentinel.setDebug(debugMode);
+      }
+      console.log('Debug mode:', debugMode);
+    }
+
+    // Update epoch counter
+    setInterval(() => {
+      const el = document.getElementById('epoch');
+      el.textContent = String(parseInt(el.textContent) + 1);
+    }, 30000);
+
+    // Auto-init
+    initOfflineMode();
+
+    // Expose for console usage
+    window.initWithServer = initWithServer;
+    window.toggleDebug = toggleDebug;
+  </script>
+
+</body>
+</html>

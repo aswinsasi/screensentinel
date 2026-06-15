@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY packages/token-service/package.json ./
+RUN npm install --production
+
+COPY packages/token-service/src/ src/
+COPY packages/token-service/tsconfig.json ./
+
+RUN npx tsc
+
+EXPOSE 3001
+CMD ["node", "dist/server.js"]
