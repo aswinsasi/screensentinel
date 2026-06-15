@@ -3,6 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
+      
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", ".nuxt/**"]
     },
